@@ -4,7 +4,7 @@ import MLKitVision
 @objc(VisionCameraQrcodeScanner)
 class VisionCameraQrcodeScanner: NSObject, FrameProcessorPluginBase {
     
-    static var format: BarcodeFormat = .qrCode
+    static var format: BarcodeFormat = .EAN13
     static var barcodeOptions = BarcodeScannerOptions(formats: format)
     static var barcodeScanner = BarcodeScanner.barcodeScanner(options: barcodeOptions)
     
@@ -29,8 +29,27 @@ class VisionCameraQrcodeScanner: NSObject, FrameProcessorPluginBase {
                        map["encryptionType"] = barcode.wifi?.type
                        map["ssid"] = barcode.wifi?.ssid
                    default:
-                       // TODO: implement all valueTypes https://developers.google.com/ml-kit/reference/swift/mlkitbarcodescanning/api/reference/Classes/Barcode
-                       map = [:]
+                    
+                        map["displayValue"] = barcode.displayValue
+                        // map["valueType"] = barcode.valueType
+                        map["rawValue"] = barcode.rawValue
+                        // map["rawData"] = String(decoding: barcode.rawData, as: UTF8.self)
+                        
+
+                        if (barcode.format == .code128) {
+                            map["barcodeType"] = "code128"
+                        } else if (barcode.format == .code128) {
+                            map["barcodeType"] = "code39"
+                        } else if (barcode.format == .code93) {
+                            map["barcodeType"] = "code93"
+                        } else if (barcode.format == .codeBar) {
+                            map["barcodeType"] = "codeBar"
+                        } else if (barcode.format == .EAN13) {
+                            map["barcodeType"] = "EAN13"
+                        } else if (barcode.format == .EAN8) {
+                            map["barcodeType"] = "EAN8"
+                        }
+                        
                    }
                    barCodeAttributes.append(map)
                  }
