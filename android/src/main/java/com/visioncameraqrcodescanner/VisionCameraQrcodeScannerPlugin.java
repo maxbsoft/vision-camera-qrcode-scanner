@@ -25,7 +25,7 @@ public class VisionCameraQrcodeScannerPlugin extends FrameProcessorPlugin {
     BarcodeScanning.getClient(
       new BarcodeScannerOptions.Builder()
       .setBarcodeFormats(
-        Barcode.FORMAT_QR_CODE
+        Barcode.FORMAT_EAN_13
       )
       .build());
 
@@ -49,14 +49,23 @@ public class VisionCameraQrcodeScannerPlugin extends FrameProcessorPlugin {
         WritableNativeArray array = new WritableNativeArray();
         for (Barcode barcode: barcodes) {
           WritableNativeMap map = new WritableNativeMap();
-          int valueType = barcode.getValueType();
+          // int valueType = barcode.getValueType();
           // See API reference for complete list of supported types
+          map.putString("displayValue", barcode.getDisplayValue());
+          map.putString("rawValue", barcode.getDisplayValue());
+          map.putString("barcodeType", "EAN13");
+          /*
           switch (valueType) {
+            map.putString("displayValue", barcode.getDisplayValue());
+            map.putString("rawValue", barcode.getDisplayValue());
+            map.putString("barcodeType", "EAN13");
+
             case Barcode.TYPE_URL:
               map.putString("title", barcode.getUrl().getTitle());
               map.putString("url",barcode.getUrl().getUrl());
               break;
           }
+          */
           array.pushMap(map);
         }
         return array;
